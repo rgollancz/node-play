@@ -1,14 +1,8 @@
+const path = require('path')
 const express = require('express')
-const app = express()
+const exphbs = require('express-handlebars')
 const port = 3000
-
-app.get('/', (request, response) => {
-  response.send('Hello from Express!')
-})
-
-app.get('/yo', (request, response) => {
-  response.send('Yo')
-})
+const app = express()
 
 app.listen(port, (err) => {
   if (err) {
@@ -16,4 +10,18 @@ app.listen(port, (err) => {
   }
 
   console.log(`server is listening on ${port}`)
+})
+
+app.engine('.hbs', exphbs({
+  defaultLayout: 'main',
+  extname: '.hbs',
+  layoutsDir: path.join(__dirname, 'views/layouts')
+}))
+app.set('view engine', '.hbs')
+app.set('views', path.join(__dirname, 'views'))
+
+app.get('/', (request, response) => {
+  response.render('home', {
+    name: 'there!'
+  })
 })
